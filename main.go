@@ -1,6 +1,11 @@
 package main
 
-import "fmt"
+import (
+	"bufio"
+	"fmt"
+	"os"
+	"strconv"
+)
 
 type User struct {
 	login     string
@@ -9,12 +14,30 @@ type User struct {
 	birthYear int
 }
 
+func (username User) Save(f *os.File) {
+	data := username.login + " " + username.name + " " + username.surname + " " + strconv.Itoa(username.birthYear) + "\n"
+	w := bufio.NewWriter(f)
+	_, err := w.WriteString(data)
+	errCheck(err)
+	w.Flush()
+}
+
+func errCheck(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
+
 func main() {
 
 	var name, surname, login string
 	var birthYear int
 	username := make(map[string]User)
 	loginCheck := make(map[string]bool)
+
+	f, err := os.Create("information.txt")
+	errCheck(err)
+	defer f.Close()
 
 	for {
 		fmt.Println("Hello, enter the user data with space: name, surname, year of birth")
@@ -31,6 +54,7 @@ func main() {
 			}
 		}
 		username[login] = User{login, surname, name, birthYear}
+		username[login].Save(f)
 		fmt.Printf("The User %s %s has been created\n", surname, name)
 	}
 }
