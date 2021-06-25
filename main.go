@@ -32,6 +32,5 @@ func main() {
 		}
 		username[login] = User{login, surname, name, birthYear}
 		fmt.Printf("The User %s %s has been created\n", surname, name)
-		fmt.Println(username)
 	}
 }
