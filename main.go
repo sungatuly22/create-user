@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"strconv"
 )
@@ -20,6 +21,12 @@ func (username User) Save(f *os.File) {
 	_, err := w.WriteString(data)
 	errCheck(err)
 	w.Flush()
+}
+
+func (username User) Show() {
+	content, err := ioutil.ReadFile("information.txt")
+	errCheck(err)
+	fmt.Println(string(content))
 }
 
 func errCheck(err error) {
@@ -56,5 +63,6 @@ func main() {
 		username[login] = User{login, surname, name, birthYear}
 		username[login].Save(f)
 		fmt.Printf("The User %s %s has been created\n", surname, name)
+		username[login].Show()
 	}
 }
